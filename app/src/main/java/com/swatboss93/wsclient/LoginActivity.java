@@ -19,6 +19,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -306,17 +307,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // TODO: attempt authentication against a network service.
             WebServiceConnection wscon = new WebServiceConnection();
             try {
-                if(wscon.autheticateUser(new User("", mEmail, mPassword))) {
-                    return true;
-                }
-                else {
-                    return false;
-                }
+                return wscon.autheticateUser(new User("", mEmail, mPassword));
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.d("Teste", e.getMessage());
             }
             // TODO: register the new account here.
-            return true;
+            return false;
         }
 
         @Override

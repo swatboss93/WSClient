@@ -4,6 +4,7 @@ package com.swatboss93.wsclient.objects;
  * Created by swatboss93 on 23/08/16.
  */
 public class User {
+    private int id;
     private String name;
     private String email;
     private String password;
@@ -13,6 +14,10 @@ public class User {
         this.email = email;
         this.password = password;
     }
+
+    public int getId() { return id; }
+
+    public void setId(int id) { this.id = id; }
 
     public String getPassword() {
         return password;

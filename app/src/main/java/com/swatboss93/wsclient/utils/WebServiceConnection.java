@@ -1,9 +1,12 @@
 package com.swatboss93.wsclient.utils;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.swatboss93.wsclient.objects.User;
 
+import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
@@ -15,14 +18,15 @@ import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
 
 /**
  * Created by swatboss93 on 14/11/15.
  */
 public class WebServiceConnection {
-    private String url_base_crud = "http://localhost:3000/users";
-    private String url_base_authentication = "http://localhost:3000/authentication";
+    private String url_base_crud = "http://localhost:8084/WSRest/wsrest/users";
+    private String url_base_authentication = "http://localhost:8084/WSRest/wsrest/users/authenticate";
 
     private List<User> getUsersWS() throws IOException {
         Gson gson = new Gson();
@@ -162,13 +166,38 @@ public class WebServiceConnection {
     }
 
     private boolean autheticateUserWS(User user) throws IOException {
-        RestTemplate rest = new RestTemplate();
-        rest.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+        URL urlws = new URL(url_base_crud);
+        Gson gson = new Gson();
+        HttpURLConnection conn = (HttpURLConnection) urlws.openConnection();
+        conn.setRequestMethod("POST");
+        conn.setDoOutput(true);
+        conn.setDoInput(true);
+        conn.setRequestProperty("Content-Type", "application/json");
+        DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
         try {
-            User userAutheticated = rest.getForObject(url_base_authentication, User.class);
+            wr.writeBytes(gson.toJson(user));
+            wr.flush();
+        } finally {
+            wr.close();
+        }
+        int responseCode = conn.getResponseCode();
+        StringBuffer response;
+        BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+        try {
+            String inputLine;
+            response = new StringBuffer();
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+        } finally {
+            in.close();
+        }
+        Log.d("Teste", response.toString());
+        User user1 = gson.fromJson(response.toString(), User.class);
+        if(user1.getId() == 0){
+            return false;
+        } else {
             return true;
-        } catch (Exception e){
-        return false;
         }
     }
 
