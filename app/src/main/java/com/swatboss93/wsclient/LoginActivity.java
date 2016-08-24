@@ -311,7 +311,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             } catch (IOException e) {
                 Log.d("Teste", e.getMessage());
             }
-            // TODO: register the new account here.
             return false;
         }
 

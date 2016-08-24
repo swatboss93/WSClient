@@ -8,6 +8,7 @@ import com.swatboss93.wsclient.objects.User;
 
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.BufferedReader;
@@ -25,8 +26,12 @@ import java.util.List;
  * Created by swatboss93 on 14/11/15.
  */
 public class WebServiceConnection {
-    private String url_base_crud = "http://localhost:8084/WSRest/wsrest/users";
-    private String url_base_authentication = "http://localhost:8084/WSRest/wsrest/users/authenticate";
+    //Ruby
+    private String url_base_crud = "http://192.168.1.13:8084/users";
+    private String url_base_authentication = "http://192.168.1.13:8084/authentication";
+    //Java
+    //private String url_base_crud = "http://192.168.1.13:8084/WSRest/wsrest/users";
+    //private String url_base_authentication = "http://192.168.1.13:8084/WSRest/wsrest/users/authenticate";
 
     private List<User> getUsersWS() throws IOException {
         Gson gson = new Gson();
@@ -166,39 +171,20 @@ public class WebServiceConnection {
     }
 
     private boolean autheticateUserWS(User user) throws IOException {
-        URL urlws = new URL(url_base_crud);
-        Gson gson = new Gson();
-        HttpURLConnection conn = (HttpURLConnection) urlws.openConnection();
-        conn.setRequestMethod("POST");
-        conn.setDoOutput(true);
-        conn.setDoInput(true);
-        conn.setRequestProperty("Content-Type", "application/json");
-        DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+
+        User user1 = new User();
+
         try {
-            wr.writeBytes(gson.toJson(user));
-            wr.flush();
-        } finally {
-            wr.close();
+            user1 = restTemplate.postForObject(url_base_authentication, user, User.class);
+        } catch (Exception e) {
+            Log.e("WebService", e.getMessage());
         }
-        int responseCode = conn.getResponseCode();
-        StringBuffer response;
-        BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-        try {
-            String inputLine;
-            response = new StringBuffer();
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
-            }
-        } finally {
-            in.close();
-        }
-        Log.d("Teste", response.toString());
-        User user1 = gson.fromJson(response.toString(), User.class);
-        if(user1.getId() == 0){
+        if(user1.getId() == 0) {
             return false;
-        } else {
-            return true;
         }
+        return true;
     }
 
     public boolean autheticateUser(User user) throws IOException {
