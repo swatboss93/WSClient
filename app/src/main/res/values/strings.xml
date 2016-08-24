@@ -14,4 +14,13 @@
         completions."
     </string>
     <string name="title_activity_home">HomeActivity</string>
+    <string name="btn_insert">Create</string>
+    <string name="btn_update">Update</string>
+    <string name="btn_delete">Delete</string>
+    <string name="tip_name">Insert your name</string>
+    <string name="tip_email">Insert your email</string>
+    <string name="tip_password">Insert your password</string>
+    <string name="invalid_name">Invalid name</string>
+    <string name="invalid_email">Invalid email</string>
+    <string name="invalid_pasword">Invalid password</string>
 </resources>
