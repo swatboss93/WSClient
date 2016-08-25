@@ -30,11 +30,11 @@ import java.util.List;
  */
 public class WebServiceConnection {
     //Ruby
-    private String url_base_crud = "http://192.168.1.13:8084/users";
-    private String url_base_authentication = "http://192.168.1.13:8084/authentication";
+    //private String url_base_crud = "http://192.168.1.13:8084/users";
+    //private String url_base_authentication = "http://192.168.1.13:8084/authentication";
     //Java
-    //private String url_base_crud = "http://192.168.1.13:8084/WSRest/wsrest/users";
-    //private String url_base_authentication = "http://192.168.1.13:8084/WSRest/wsrest/users/authenticate";
+    private String url_base_crud = "http://192.168.1.13:8084/WSRest/wsrest/users";
+    private String url_base_authentication = "http://192.168.1.13:8084/WSRest/wsrest/users/authenticate";
 
     private List<User> getUsersWS() throws IOException {
         RestTemplate restTemplate = new RestTemplate();
@@ -81,22 +81,6 @@ public class WebServiceConnection {
             Log.e("WebService", e.getMessage());
             return false;
         }
-        /*
-        Gson gson = new Gson();
-        StringBuilder result = new StringBuilder();
-        URL urlws = new URL(url_base_crud + "/" + user.getId());
-        HttpURLConnection conn = (HttpURLConnection) urlws.openConnection();
-        conn.setRequestMethod("DELETE");
-
-        BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-        try {
-            String line;
-            while ((line = rd.readLine()) != null) {
-                result.append(line);
-            }
-        } finally {
-            rd.close();
-        }*/
     }
 
     public boolean deleteUser(User user) throws IOException, URISyntaxException {

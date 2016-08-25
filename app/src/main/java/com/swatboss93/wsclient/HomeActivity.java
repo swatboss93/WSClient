@@ -53,9 +53,9 @@ public class HomeActivity extends AppCompatActivity {
         try {
             users = new GetListAsync().execute().get();
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            Log.e("Home", e.getMessage());
         } catch (ExecutionException e) {
-            e.printStackTrace();
+            Log.e("Home", e.getMessage());
         }
 
         listView.setAdapter(new UserAdapter(getApplicationContext(), users));
